@@ -80,23 +80,23 @@ class MyEdeepVPP(nn.Module):
         super().__init__()
         self.embed = nn.Embedding(vocab_size, emb_dim)
         self.conv1 = nn.Sequential(
-            nn.Conv1d(in_channels=5, out_channels=64, kernel_size=256), 
-            nn.RuLU(), 
-            nn.MaxPool1d(kernel_size=256), 
+            nn.Conv1d(in_channels=5, out_channels=256, kernel_size=3, stride=1), 
+            nn.ReLU(), 
+            nn.MaxPool1d(kernel_size=2), 
         )
         self.conv2 = nn.Sequential(
-            nn.Conv1d(in_channels=96, out_channels=128, kernel_size=64), 
+            nn.Conv1d(in_channels=256, out_channels=128, kernel_size=8, stride=1), 
             nn.ReLU(), 
-            nn.MaxPool1d(kernel_size=128)
+            nn.MaxPool1d(kernel_size=2)
         )
         self.conv3 = nn.Sequential(
-            nn.Conv1d(in_channels=128, out_channels=256, kernel_size=5), 
+            nn.Conv1d(in_channels=128, out_channels=96, kernel_size=8, stride=1), 
             nn.ReLU(), 
-            nn.MaxPool1d(kernel_size=5)
+            nn.MaxPool1d(kernel_size=2)
         )
         self.fc = nn.Sequential(
             nn.Flatten(), 
-            nn.Linear(in_features=128, out_features=4096), 
+            nn.Linear(in_features=3072, out_features=4096), 
             nn.ReLU(), 
             nn.Dropout(p=0.2), 
             nn.Linear(in_features=4096, out_features=1000), 
