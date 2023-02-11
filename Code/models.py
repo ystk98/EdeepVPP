@@ -114,3 +114,48 @@ class MyEdeepVPP(nn.Module):
         y = self.fc(x)
 
         return y
+    
+class ParallelEdeepVPP(nn.Module):
+    def __init__(self, vocab_size, emb_dim, out_size=2):
+        super().__init__()
+        self.embed = nn.Embedding(vocab_size, emb_dim)
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(in_channels=5, out_channels=128, kernel_size=8), 
+            nn.ReLU(), 
+            nn.Conv1d(in_channels=128, out_channels=64, kernel_size=8), 
+            nn.ReLU(), 
+            nn.MaxPool1d(kernel_size=3), 
+            nn.Flatten()
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(in_channels=5, out_channels=64, kernel_size=32), 
+            nn.ReLU(), 
+            nn.MaxPool1d(kernel_size=4), 
+            nn.Flatten()
+        )
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(in_channels=5, out_channels=16, kernel_size=128), 
+            nn.ReLU(), 
+            nn.MaxPool1d(kernel_size=8), 
+            nn.Flatten()
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(in_features=28640, out_features=2048), 
+            nn.ReLU(), 
+            nn.Dropout(p=0.2), 
+            nn.Linear(in_features=2048, out_features=1000), 
+            nn.ReLU(), 
+            nn.Dropout(p=0.2), 
+            nn.Linear(in_features=1000, out_features=out_size)
+        )
+
+    def forward(self, x):
+        x = self.embed(x)
+        x = torch.transpose(x, 2, 1)
+        conv1 = self.conv1(x)
+        conv2 = self.conv2(x)
+        conv3 = self.conv3(x)
+        cat = torch.cat((conv1, conv2, conv3), dim=1)
+        y = self.fc(cat)
+
+        return y
