@@ -47,7 +47,7 @@ class BatchedGenomeDataLoader(DataLoader):
         i, batch_size = self.iteration, self.batch_size
         batch_index = self.index[i*batch_size:(i + 1)*batch_size]
         batch = [self.dataset[i] for i in batch_index]
-        x = torch.tensor([example[0] for example in batch]).cuda()
+        x = torch.from_numpy(np.array([example[0] for example in batch])).cuda().to(torch.float32)
         t = torch.tensor([example[1] for example in batch], dtype=torch.float32).cuda()
 
         self.iteration += 1

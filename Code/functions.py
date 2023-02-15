@@ -1,4 +1,4 @@
-import torch
+import numpy as np
 
 
 # =============================================================================
@@ -29,7 +29,7 @@ def one_hot_encoding(sequence):
     mapping = {"A": 0, "C": 1, "G": 2, "T": 3, "N": 4}
     seq2 = [mapping[i] for i in sequence]
 
-    return torch.eye(5)[seq2]
+    return np.eye(5)[seq2]
 
 
 def label_encoding(label):

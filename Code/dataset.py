@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from functions import integer_encoding, label_encoding
+from functions import integer_encoding, one_hot_encoding, label_encoding
 
 
 # =============================================================================
@@ -50,6 +50,28 @@ class BigGenomeDataset(GenomeDataset):
 
     def __getitem__(self, index):
         x = integer_encoding(self.df[1][index])
+        t = label_encoding(self.df[2][index])
+
+        return x, t
+
+    def __len__(self):
+        return len(self.df)
+    
+
+class OneHotGenomeDataset(GenomeDataset):
+    """
+    Note: OneHotGenomeDataset returns one-hot encoded seq.
+
+        Input: 
+            data_path (string): csv file data path
+        
+    """
+    def __init__(self, data_path):
+        super().__init__(data_path)
+        self.df = pd.read_csv(data_path, header=None)
+
+    def __getitem__(self, index):
+        x = one_hot_encoding(self.df[1][index])
         t = label_encoding(self.df[2][index])
 
         return x, t

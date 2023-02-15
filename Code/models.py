@@ -163,3 +163,27 @@ class ParallelEdeepVPP(nn.Module):
         y = self.fc(cat)
 
         return y
+
+class OneConv(nn.Module):
+    def __init__(self, vocab_size, emb_dim, out_size=2):
+        super().__init__()
+        self.conv = nn.Conv1d(in_channels=5, out_channels=128, kernel_size=9, padding='same')
+        self.relu = nn.ReLU()
+        self.fc = nn.Sequential(
+            nn.Flatten(), 
+            nn.Linear(in_features=38400, out_features=2048), 
+            nn.ReLU(), 
+            nn.Dropout(p=0.2), 
+            nn.Linear(in_features=2048, out_features=1024), 
+            nn.ReLU(), 
+            nn.Dropout(p=0.2), 
+            nn.Linear(in_features=1024, out_features=out_size)
+        )
+
+    def forward(self, x):
+        x = torch.transpose(x, 2, 1)
+        x = self.conv(x)
+        x = self.relu(x)
+        y = self.fc(x)
+
+        return y
