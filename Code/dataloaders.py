@@ -5,22 +5,22 @@ from  torch.utils.data import DataLoader
 
 """
 General: 
-    DataLoader class returns datum of Dataset as mini-batched Iterator.
+    DataLoader class returns datum of Dataset as mini- Iterator.
     In addition, DataLoader shuffles the data order.
 
 """
 
 # =============================================================================
-# BatchedGenomeDataLoader
+# GenomeDataLoader
 # =============================================================================
 """
 Note:
     Input: fixed-length genome data
-    Output: mini-batched Iterator.
+    Output: Iterator
 
 """
 
-class BatchedGenomeDataLoader(DataLoader):
+class GenomeDataLoader(DataLoader):
     def __init__(self, dataset, batch_size=1000, shuffle=True):
         super().__init__(dataset=dataset, batch_size=batch_size, shuffle=shuffle)
         self.shuffle = shuffle

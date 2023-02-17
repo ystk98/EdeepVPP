@@ -36,9 +36,9 @@ class GenomeDataset(Dataset):
         pass
 
 
-class BigGenomeDataset(GenomeDataset):
+class CsvGenomeDataset(GenomeDataset):
     """
-    Note: BigGenomeDataset can be used for genome datasets which are too big to be expanded to computer memory.
+    Note: CsvGenomeDataset can be used for genome datasets which are too big to be expanded to computer memory.
 
         Input: 
             data_path (string): csv file data path
